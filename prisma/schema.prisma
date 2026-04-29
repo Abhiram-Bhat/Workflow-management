@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
+  role      String   @default("member") // admin, member
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assignedTasks      Task[]       @relation("TaskAssignee")
+  createdWorkflows   Workflow[]   @relation("WorkflowCreator")
+  createdTasks       Task[]       @relation("TaskCreator")
+  comments           Comment[]
+  notifications      Notification[]
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workflows Workflow[]
+}
+
+model Workflow {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  status      String   @default("draft") // draft, active, archived
+  priority    String   @default("medium") // low, medium, high
+  teamId      String?
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  team      Team?   @relation(fields: [teamId], references: [id])
+  createdBy User    @relation("WorkflowCreator", fields: [createdById], references: [id])
+  tasks     Task[]
+  executions WorkflowExecution[]
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      String   @default("todo") // todo, in_progress, review, completed
+  priority    String   @default("medium") // low, medium, high
+  order       Int      @default(0)
+  dueDate     DateTime?
+  completedAt DateTime?
+  workflowId  String
+  createdById String
+  assigneeId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workflow  Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  createdBy User     @relation("TaskCreator", fields: [createdById], references: [id])
+  assignee  User?    @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  comments  Comment[]
+}
+
+model WorkflowExecution {
+  id          String   @id @default(cuid())
+  workflowId  String
+  status      String   @default("running") // running, completed, failed, cancelled
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  workflow Workflow @relation(fields: [workflowId], references: [id])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  taskId    String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  type      String   // task_assigned, task_completed, workflow_updated, etc.
+  isRead    Boolean  @default(false)
+  userId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
