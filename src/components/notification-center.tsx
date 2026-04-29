@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bell, X, Check, CheckCheck, Trash2, Filter } from 'lucide-react'
+import { Bell, Check, CheckCheck, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -39,7 +39,7 @@ export function NotificationCenter({ userId }: { userId: string }) {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await fetch('/api/notifications')
+        const response = await fetch(`/api/notifications?userId=${userId}`)
         if (response.ok) {
           const data = await response.json()
           setNotifications(data)
@@ -54,7 +54,7 @@ export function NotificationCenter({ userId }: { userId: string }) {
 
   const markAsRead = async (id: string) => {
     try {
-      await fetch(`/api/notifications/${id}/read`, { method: 'PUT' })
+      await fetch(`/api/notifications/${id}`, { method: 'PUT' })
       setNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
       )
@@ -65,7 +65,11 @@ export function NotificationCenter({ userId }: { userId: string }) {
 
   const markAllAsRead = async () => {
     try {
-      await fetch('/api/notifications/mark-all-read', { method: 'PUT' })
+      await fetch('/api/notifications/mark-all-read', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      })
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))
     } catch (error) {
       console.error('Error marking all as read:', error)
@@ -86,17 +90,17 @@ export function NotificationCenter({ userId }: { userId: string }) {
       case 'task_assigned':
         return 'bg-blue-500'
       case 'task_completed':
-        return 'bg-green-500'
+        return 'bg-emerald-500'
       case 'task_updated':
-        return 'bg-yellow-500'
+        return 'bg-amber-500'
       case 'workflow_updated':
         return 'bg-purple-500'
       case 'comment_added':
         return 'bg-orange-500'
       case 'system':
-        return 'bg-gray-500'
+        return 'bg-zinc-500'
       default:
-        return 'bg-gray-500'
+        return 'bg-zinc-500'
     }
   }
 
@@ -145,25 +149,25 @@ export function NotificationCenter({ userId }: { userId: string }) {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="icon" className="relative">
+        <Button variant="outline" size="icon" className="relative border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
           <Bell className="w-5 h-5" />
           {unreadCount > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs"
+              className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs bg-red-500"
             >
               {unreadCount > 9 ? '9+' : unreadCount}
             </Badge>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-0" align="end">
-        <Card className="border-0 shadow-none">
+      <PopoverContent className="w-[400px] p-0 border-zinc-700 bg-zinc-900" align="end">
+        <Card className="border-0 shadow-none bg-zinc-900">
           <CardHeader className="pb-3 px-4 pt-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Notifications</CardTitle>
+              <CardTitle className="text-lg text-zinc-100">Notifications</CardTitle>
               {unreadCount > 0 && (
-                <Button variant="ghost" size="sm" onClick={markAllAsRead}>
+                <Button variant="ghost" size="sm" onClick={markAllAsRead} className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800">
                   <CheckCheck className="w-4 h-4 mr-2" />
                   Mark all read
                 </Button>
@@ -171,27 +175,27 @@ export function NotificationCenter({ userId }: { userId: string }) {
             </div>
             <div className="flex items-center gap-2">
               <Select value={filter} onValueChange={(v) => setFilter(v as any)}>
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="h-8 text-xs bg-zinc-800/50 border-zinc-700 text-zinc-100">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="unread">Unread</SelectItem>
-                  <SelectItem value="read">Read</SelectItem>
+                <SelectContent className="bg-zinc-800 border-zinc-700">
+                  <SelectItem value="all" className="text-zinc-100">All</SelectItem>
+                  <SelectItem value="unread" className="text-zinc-100">Unread</SelectItem>
+                  <SelectItem value="read" className="text-zinc-100">Read</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="h-8 text-xs flex-1">
+                <SelectTrigger className="h-8 text-xs flex-1 bg-zinc-800/50 border-zinc-700 text-zinc-100">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="task_assigned">Task Assigned</SelectItem>
-                  <SelectItem value="task_completed">Task Completed</SelectItem>
-                  <SelectItem value="task_updated">Task Updated</SelectItem>
-                  <SelectItem value="workflow_updated">Workflow Updated</SelectItem>
-                  <SelectItem value="comment_added">Comment Added</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
+                <SelectContent className="bg-zinc-800 border-zinc-700">
+                  <SelectItem value="all" className="text-zinc-100">All Types</SelectItem>
+                  <SelectItem value="task_assigned" className="text-zinc-100">Task Assigned</SelectItem>
+                  <SelectItem value="task_completed" className="text-zinc-100">Task Completed</SelectItem>
+                  <SelectItem value="task_updated" className="text-zinc-100">Task Updated</SelectItem>
+                  <SelectItem value="workflow_updated" className="text-zinc-100">Workflow Updated</SelectItem>
+                  <SelectItem value="comment_added" className="text-zinc-100">Comment Added</SelectItem>
+                  <SelectItem value="system" className="text-zinc-100">System</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -199,9 +203,9 @@ export function NotificationCenter({ userId }: { userId: string }) {
           <CardContent className="p-0">
             <ScrollArea className="h-[400px]">
               {filteredNotifications.length === 0 ? (
-                <div className="p-8 text-center text-muted-foreground">
-                  <Bell className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>No notifications</p>
+                <div className="p-8 text-center">
+                  <Bell className="w-12 h-12 mx-auto mb-3 text-zinc-600" />
+                  <p className="text-zinc-500">No notifications</p>
                 </div>
               ) : (
                 <div className="space-y-1">
@@ -213,8 +217,8 @@ export function NotificationCenter({ userId }: { userId: string }) {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.2 }}
-                        className={`p-4 border-b last:border-b-0 hover:bg-muted/50 transition-colors ${
-                          !notification.isRead ? 'bg-muted/30' : ''
+                        className={`p-4 border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors ${
+                          !notification.isRead ? 'bg-zinc-800/30' : ''
                         }`}
                       >
                         <div className="flex items-start gap-3">
@@ -227,11 +231,11 @@ export function NotificationCenter({ userId }: { userId: string }) {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex-1 min-w-0">
-                                <p className="font-medium text-sm">{notification.title}</p>
-                                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                                <p className="font-medium text-sm text-zinc-100">{notification.title}</p>
+                                <p className="text-sm text-zinc-500 mt-1 line-clamp-2">
                                   {notification.message}
                                 </p>
-                                <p className="text-xs text-muted-foreground mt-2">
+                                <p className="text-xs text-zinc-500 mt-2">
                                   {formatTime(notification.createdAt)}
                                 </p>
                               </div>
@@ -243,7 +247,7 @@ export function NotificationCenter({ userId }: { userId: string }) {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8"
+                                className="h-8 w-8 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800"
                                 onClick={() => markAsRead(notification.id)}
                               >
                                 <Check className="w-4 h-4" />
@@ -252,10 +256,10 @@ export function NotificationCenter({ userId }: { userId: string }) {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8"
+                              className="h-8 w-8 text-zinc-400 hover:text-red-400 hover:bg-red-500/10"
                               onClick={() => deleteNotification(notification.id)}
                             >
-                              <Trash2 className="w-4 h-4 text-destructive" />
+                              <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
                         </div>

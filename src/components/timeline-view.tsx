@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Clock, User, CheckCircle2, Circle, AlertCircle, ChevronDown, ChevronRight } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -49,13 +49,13 @@ export function TimelineView({ data }: { data: TimelineData }) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'in_progress':
-        return 'bg-green-500'
+        return 'bg-emerald-500'
       case 'review':
-        return 'bg-yellow-500'
+        return 'bg-amber-500'
       case 'completed':
         return 'bg-blue-500'
       default:
-        return 'bg-gray-500'
+        return 'bg-zinc-600'
     }
   }
 
@@ -72,16 +72,42 @@ export function TimelineView({ data }: { data: TimelineData }) {
     }
   }
 
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'in_progress':
+        return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+      case 'review':
+        return 'text-amber-400 bg-amber-500/10 border-amber-500/20'
+      case 'completed':
+        return 'text-blue-400 bg-blue-500/10 border-blue-500/20'
+      default:
+        return 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20'
+    }
+  }
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high':
-        return 'text-red-500'
+        return 'text-red-400'
       case 'medium':
-        return 'text-yellow-500'
+        return 'text-amber-400'
       case 'low':
-        return 'text-green-500'
+        return 'text-emerald-400'
       default:
-        return 'text-gray-500'
+        return 'text-zinc-500'
+    }
+  }
+
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return 'text-red-400 bg-red-500/10 border-red-500/20'
+      case 'medium':
+        return 'text-amber-400 bg-amber-500/10 border-amber-500/20'
+      case 'low':
+        return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+      default:
+        return 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20'
     }
   }
 
@@ -103,68 +129,68 @@ export function TimelineView({ data }: { data: TimelineData }) {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b space-y-4">
+      <div className="p-6 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-sm space-y-4 shrink-0 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold">{data.workflowName}</h2>
-            <CardDescription className="mt-1">
+            <h2 className="text-2xl font-bold text-zinc-100">{data.workflowName}</h2>
+            <CardDescription className="mt-1 text-zinc-500">
               Timeline View • {data.tasks.length} tasks total
             </CardDescription>
           </div>
           <Select value={viewMode} onValueChange={(v) => setViewMode(v as any)}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] bg-zinc-800/50 border-zinc-700 text-zinc-100">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="timeline">Timeline View</SelectItem>
-              <SelectItem value="list">List View</SelectItem>
+            <SelectContent className="bg-zinc-800 border-zinc-700">
+              <SelectItem value="timeline" className="text-zinc-100">Timeline View</SelectItem>
+              <SelectItem value="list" className="text-zinc-100">List View</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Progress Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card className="bg-zinc-900/50 border-zinc-800">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Progress</CardTitle>
+              <CardTitle className="text-sm font-medium text-zinc-400">Progress</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{Math.round(progress)}%</div>
+              <div className="text-3xl font-bold text-zinc-100">{Math.round(progress)}%</div>
               <Progress value={progress} className="mt-2 h-2" />
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-zinc-900/50 border-zinc-800">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Completed</CardTitle>
+              <CardTitle className="text-sm font-medium text-zinc-400">Completed</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{completedTasks}</div>
-              <p className="text-xs text-muted-foreground mt-1">of {data.tasks.length} tasks</p>
+              <div className="text-3xl font-bold text-zinc-100">{completedTasks}</div>
+              <p className="text-xs text-zinc-500 mt-1">of {data.tasks.length} tasks</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-zinc-900/50 border-zinc-800">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
+              <CardTitle className="text-sm font-medium text-zinc-400">In Progress</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">
+              <div className="text-3xl font-bold text-zinc-100">
                 {data.tasks.filter((t) => t.status === 'in_progress').length}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">tasks active</p>
+              <p className="text-xs text-zinc-500 mt-1">tasks active</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-zinc-900/50 border-zinc-800">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">High Priority</CardTitle>
+              <CardTitle className="text-sm font-medium text-zinc-400">High Priority</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">
+              <div className="text-3xl font-bold text-zinc-100">
                 {data.tasks.filter((t) => t.priority === 'high').length}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">needs attention</p>
+              <p className="text-xs text-zinc-500 mt-1">needs attention</p>
             </CardContent>
           </Card>
         </div>
@@ -184,30 +210,30 @@ export function TimelineView({ data }: { data: TimelineData }) {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="relative pl-8 pb-6 border-l-2 border-border"
+                  className="relative pl-8 pb-6 border-l-2 border-zinc-800"
                 >
                   {/* Timeline Node */}
                   <div
-                    className={`absolute left-[-9px] top-0 w-4 h-4 rounded-full ${getStatusColor(task.status)} border-2 border-background`}
+                    className={`absolute left-[-9px] top-0 w-4 h-4 rounded-full ${getStatusColor(task.status)} border-2 border-zinc-950`}
                   />
 
                   {/* Task Card */}
-                  <Card className="hover:shadow-md transition-shadow">
+                  <Card className="bg-zinc-900/50 border-zinc-800 hover:border-zinc-700/50 hover:shadow-lg hover:shadow-zinc-900/20 transition-all">
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex items-start gap-3 flex-1">
-                          <StatusIcon className="w-5 h-5 mt-0.5 text-muted-foreground" />
+                          <StatusIcon className="w-5 h-5 mt-0.5 text-zinc-500" />
                           <div className="flex-1 min-w-0">
-                            <CardTitle className="text-base">{task.title}</CardTitle>
+                            <CardTitle className="text-base text-zinc-100">{task.title}</CardTitle>
                             <div className="flex flex-wrap items-center gap-2 mt-2">
-                              <Badge variant="secondary" className="text-xs">
+                              <Badge variant="outline" className={getStatusBadge(task.status)}>
                                 {task.status.replace('_', ' ')}
                               </Badge>
-                              <Badge variant="outline" className={`text-xs ${getPriorityColor(task.priority)}`}>
+                              <Badge variant="outline" className={getPriorityBadge(task.priority)}>
                                 {task.priority}
                               </Badge>
                               {task.dueDate && (
-                                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                <span className="text-xs text-zinc-500 flex items-center gap-1">
                                   <Calendar className="w-3 h-3" />
                                   {new Date(task.dueDate).toLocaleDateString('en-US', {
                                     month: 'short',
@@ -222,7 +248,7 @@ export function TimelineView({ data }: { data: TimelineData }) {
                         {task.assignee && (
                           <Avatar className="shrink-0">
                             <AvatarImage src={task.assignee.avatar} />
-                            <AvatarFallback>
+                            <AvatarFallback className="bg-emerald-600 text-white">
                               {task.assignee.name
                                 .split(' ')
                                 .map((n) => n[0])
@@ -235,6 +261,7 @@ export function TimelineView({ data }: { data: TimelineData }) {
                           variant="ghost"
                           size="icon"
                           onClick={() => toggleExpand(task.id)}
+                          className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
                         >
                           {isExpanded ? (
                             <ChevronDown className="w-4 h-4" />
@@ -247,9 +274,9 @@ export function TimelineView({ data }: { data: TimelineData }) {
 
                     {isExpanded && task.description && (
                       <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground">{task.description}</p>
+                        <p className="text-sm text-zinc-500">{task.description}</p>
                         {task.assignee && (
-                          <div className="flex items-center gap-2 mt-3 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2 mt-3 text-sm text-zinc-500">
                             <User className="w-4 h-4" />
                             <span>Assigned to {task.assignee.name}</span>
                           </div>
@@ -274,18 +301,18 @@ export function TimelineView({ data }: { data: TimelineData }) {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <Card className="hover:shadow-md transition-shadow">
+                  <Card className="bg-zinc-900/50 border-zinc-800 hover:border-zinc-700/50 hover:shadow-lg hover:shadow-zinc-900/20 transition-all">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-3 flex-1">
-                          <StatusIcon className="w-5 h-5 text-muted-foreground shrink-0" />
+                          <StatusIcon className="w-5 h-5 text-zinc-500 shrink-0" />
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-medium">{task.title}</h4>
+                            <h4 className="font-medium text-zinc-100">{task.title}</h4>
                             <div className="flex flex-wrap items-center gap-2 mt-1">
-                              <Badge variant="secondary" className="text-xs">
+                              <Badge variant="outline" className={getStatusBadge(task.status)}>
                                 {task.status.replace('_', ' ')}
                               </Badge>
-                              <Badge variant="outline" className={`text-xs ${getPriorityColor(task.priority)}`}>
+                              <Badge variant="outline" className={getPriorityBadge(task.priority)}>
                                 {task.priority}
                               </Badge>
                             </div>
@@ -294,7 +321,7 @@ export function TimelineView({ data }: { data: TimelineData }) {
 
                         <div className="flex items-center gap-4 shrink-0">
                           {task.dueDate && (
-                            <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            <span className="text-xs text-zinc-500 flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
                               {new Date(task.dueDate).toLocaleDateString('en-US', {
                                 month: 'short',
@@ -306,7 +333,7 @@ export function TimelineView({ data }: { data: TimelineData }) {
                           {task.assignee && (
                             <Avatar className="w-8 h-8">
                               <AvatarImage src={task.assignee.avatar} />
-                              <AvatarFallback className="text-xs">
+                              <AvatarFallback className="bg-zinc-700 text-zinc-300 text-xs">
                                 {task.assignee.name
                                   .split(' ')
                                   .map((n) => n[0])

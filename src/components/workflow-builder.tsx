@@ -50,6 +50,7 @@ import {
 } from '@/components/ui/dialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Label } from '@/components/ui/label'
 
 export interface Task {
   id: string
@@ -98,13 +99,13 @@ function SortableTask({ task, onDelete, onEdit, onToggleExpand, isExpanded }: So
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'in_progress':
-        return 'bg-green-500'
+        return 'bg-emerald-500'
       case 'review':
-        return 'bg-yellow-500'
+        return 'bg-amber-500'
       case 'completed':
         return 'bg-blue-500'
       default:
-        return 'bg-gray-500'
+        return 'bg-zinc-600'
     }
   }
 
@@ -113,11 +114,37 @@ function SortableTask({ task, onDelete, onEdit, onToggleExpand, isExpanded }: So
       case 'high':
         return 'bg-red-500'
       case 'medium':
-        return 'bg-yellow-500'
+        return 'bg-amber-500'
       case 'low':
-        return 'bg-green-500'
+        return 'bg-emerald-500'
       default:
-        return 'bg-gray-500'
+        return 'bg-zinc-600'
+    }
+  }
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'in_progress':
+        return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+      case 'review':
+        return 'text-amber-400 bg-amber-500/10 border-amber-500/20'
+      case 'completed':
+        return 'text-blue-400 bg-blue-500/10 border-blue-500/20'
+      default:
+        return 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20'
+    }
+  }
+
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return 'text-red-400 bg-red-500/10 border-red-500/20'
+      case 'medium':
+        return 'text-amber-400 bg-amber-500/10 border-amber-500/20'
+      case 'low':
+        return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+      default:
+        return 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20'
     }
   }
 
@@ -129,15 +156,15 @@ function SortableTask({ task, onDelete, onEdit, onToggleExpand, isExpanded }: So
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.2 }}
       >
-        <Card className="hover:shadow-md transition-shadow">
+        <Card className="bg-zinc-900/50 border-zinc-800 hover:border-zinc-700/50 hover:shadow-lg hover:shadow-zinc-900/20 transition-all">
           <CardHeader className="p-4">
             <div className="flex items-center gap-3">
               <motion.div
                 {...attributes}
                 {...listeners}
-                className="cursor-grab active:cursor-grabbing p-1 hover:bg-muted rounded"
+                className="cursor-grab active:cursor-grabbing p-1 hover:bg-zinc-800/50 rounded"
               >
-                <GripVertical className="w-5 h-5 text-muted-foreground" />
+                <GripVertical className="w-5 h-5 text-zinc-500" />
               </motion.div>
 
               <div
@@ -145,9 +172,9 @@ function SortableTask({ task, onDelete, onEdit, onToggleExpand, isExpanded }: So
               />
 
               <div className="flex-1 min-w-0">
-                <CardTitle className="text-base">{task.title}</CardTitle>
+                <CardTitle className="text-base text-zinc-100">{task.title}</CardTitle>
                 {task.description && (
-                  <p className="text-sm text-muted-foreground mt-1 truncate">
+                  <p className="text-sm text-zinc-500 mt-1 truncate">
                     {task.description}
                   </p>
                 )}
@@ -159,6 +186,7 @@ function SortableTask({ task, onDelete, onEdit, onToggleExpand, isExpanded }: So
                 variant="ghost"
                 size="icon"
                 onClick={() => onToggleExpand(task.id)}
+                className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
               >
                 {isExpanded ? (
                   <ChevronDown className="w-4 h-4" />
@@ -171,6 +199,7 @@ function SortableTask({ task, onDelete, onEdit, onToggleExpand, isExpanded }: So
                 variant="ghost"
                 size="icon"
                 onClick={() => onEdit(task)}
+                className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
               >
                 <Edit2 className="w-4 h-4" />
               </Button>
@@ -179,8 +208,9 @@ function SortableTask({ task, onDelete, onEdit, onToggleExpand, isExpanded }: So
                 variant="ghost"
                 size="icon"
                 onClick={() => onDelete(task.id)}
+                className="text-zinc-400 hover:text-red-400 hover:bg-red-500/10"
               >
-                <Trash2 className="w-4 h-4 text-destructive" />
+                <Trash2 className="w-4 h-4" />
               </Button>
             </div>
           </CardHeader>
@@ -196,23 +226,27 @@ function SortableTask({ task, onDelete, onEdit, onToggleExpand, isExpanded }: So
                 <CardContent className="pt-0 px-4 pb-4">
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-muted-foreground">Status:</span>{' '}
-                      <Badge variant="secondary">{task.status}</Badge>
+                      <span className="text-zinc-500">Status:</span>{' '}
+                      <Badge variant="outline" className={getStatusBadge(task.status)}>
+                        {task.status.replace('_', ' ')}
+                      </Badge>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Priority:</span>{' '}
-                      <Badge variant="outline">{task.priority}</Badge>
+                      <span className="text-zinc-500">Priority:</span>{' '}
+                      <Badge variant="outline" className={getPriorityBadge(task.priority)}>
+                        {task.priority}
+                      </Badge>
                     </div>
                     {task.assignee && (
                       <div>
-                        <span className="text-muted-foreground">Assignee:</span>{' '}
-                        <span>{task.assignee}</span>
+                        <span className="text-zinc-500">Assignee:</span>{' '}
+                        <span className="text-zinc-300">{task.assignee}</span>
                       </div>
                     )}
                     {task.dueDate && (
                       <div>
-                        <span className="text-muted-foreground">Due Date:</span>{' '}
-                        <span>
+                        <span className="text-zinc-500">Due Date:</span>{' '}
+                        <span className="text-zinc-300">
                           {new Date(task.dueDate).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
@@ -268,57 +302,59 @@ function TaskForm({ task, onSave, onCancel }: TaskFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="text-sm font-medium">Title</label>
+        <Label className="text-zinc-300">Title</Label>
         <Input
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           placeholder="Enter task title"
           autoFocus
+          className="bg-zinc-800/50 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-500"
         />
       </div>
 
       <div>
-        <label className="text-sm font-medium">Description</label>
+        <Label className="text-zinc-300">Description</Label>
         <Textarea
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           placeholder="Enter task description"
           rows={3}
+          className="bg-zinc-800/50 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-500 resize-none"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium">Status</label>
+          <Label className="text-zinc-300">Status</Label>
           <Select
             value={formData.status}
             onValueChange={(value) => setFormData({ ...formData, status: value as any })}
           >
-            <SelectTrigger>
+            <SelectTrigger className="bg-zinc-800/50 border-zinc-700 text-zinc-100 focus-visible:ring-emerald-500">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todo">To Do</SelectItem>
-              <SelectItem value="in_progress">In Progress</SelectItem>
-              <SelectItem value="review">Review</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
+            <SelectContent className="bg-zinc-800 border-zinc-700">
+              <SelectItem value="todo" className="text-zinc-100">To Do</SelectItem>
+              <SelectItem value="in_progress" className="text-zinc-100">In Progress</SelectItem>
+              <SelectItem value="review" className="text-zinc-100">Review</SelectItem>
+              <SelectItem value="completed" className="text-zinc-100">Completed</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div>
-          <label className="text-sm font-medium">Priority</label>
+          <Label className="text-zinc-300">Priority</Label>
           <Select
             value={formData.priority}
             onValueChange={(value) => setFormData({ ...formData, priority: value as any })}
           >
-            <SelectTrigger>
+            <SelectTrigger className="bg-zinc-800/50 border-zinc-700 text-zinc-100 focus-visible:ring-emerald-500">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="low">Low</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="high">High</SelectItem>
+            <SelectContent className="bg-zinc-800 border-zinc-700">
+              <SelectItem value="low" className="text-zinc-100">Low</SelectItem>
+              <SelectItem value="medium" className="text-zinc-100">Medium</SelectItem>
+              <SelectItem value="high" className="text-zinc-100">High</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -326,30 +362,37 @@ function TaskForm({ task, onSave, onCancel }: TaskFormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium">Assignee</label>
+          <Label className="text-zinc-300">Assignee</Label>
           <Input
             value={formData.assignee || ''}
             onChange={(e) => setFormData({ ...formData, assignee: e.target.value })}
             placeholder="Enter assignee"
+            className="bg-zinc-800/50 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-500"
           />
         </div>
 
         <div>
-          <label className="text-sm font-medium">Due Date</label>
+          <Label className="text-zinc-300">Due Date</Label>
           <Input
             type="date"
             value={formData.dueDate || ''}
             onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+            className="bg-zinc-800/50 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-500"
           />
         </div>
       </div>
 
       <div className="flex gap-2 justify-end">
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+          className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+        >
           <X className="w-4 h-4 mr-2" />
           Cancel
         </Button>
-        <Button type="submit">
+        <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">
           <Save className="w-4 h-4 mr-2" />
           Save
         </Button>
@@ -425,24 +468,26 @@ export function WorkflowBuilder({ workflow, onUpdate }: { workflow: Workflow; on
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b">
+      <div className="flex items-center justify-between p-6 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-sm shrink-0 sticky top-0 z-10">
         <div>
-          <h2 className="text-2xl font-bold">{workflow.name}</h2>
+          <h2 className="text-2xl font-bold text-zinc-100">{workflow.name}</h2>
           {workflow.description && (
-            <p className="text-muted-foreground mt-1">{workflow.description}</p>
+            <p className="text-zinc-500 mt-1">{workflow.description}</p>
           )}
         </div>
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="bg-emerald-600 hover:bg-emerald-700">
               <Plus className="w-4 h-4 mr-2" />
               Add Task
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100">
             <DialogHeader>
-              <DialogTitle>Add New Task</DialogTitle>
-              <DialogDescription>Create a new task for this workflow</DialogDescription>
+              <DialogTitle className="text-zinc-100">Add New Task</DialogTitle>
+              <DialogDescription className="text-zinc-500">
+                Create a new task for this workflow
+              </DialogDescription>
             </DialogHeader>
             <TaskForm onSave={handleAddTask} onCancel={() => setShowAddDialog(false)} />
           </DialogContent>
@@ -477,8 +522,8 @@ export function WorkflowBuilder({ workflow, onUpdate }: { workflow: Workflow; on
                   animate={{ opacity: 1 }}
                   className="text-center py-12"
                 >
-                  <p className="text-muted-foreground mb-4">No tasks yet</p>
-                  <Button onClick={() => setShowAddDialog(true)}>
+                  <p className="text-zinc-500 mb-4">No tasks yet</p>
+                  <Button onClick={() => setShowAddDialog(true)} className="bg-emerald-600 hover:bg-emerald-700">
                     <Plus className="w-4 h-4 mr-2" />
                     Add Your First Task
                   </Button>
@@ -492,10 +537,12 @@ export function WorkflowBuilder({ workflow, onUpdate }: { workflow: Workflow; on
       {/* Edit Task Dialog */}
       {editingTask && (
         <Dialog open={!!editingTask} onOpenChange={() => setEditingTask(null)}>
-          <DialogContent>
+          <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100">
             <DialogHeader>
-              <DialogTitle>Edit Task</DialogTitle>
-              <DialogDescription>Update task details</DialogDescription>
+              <DialogTitle className="text-zinc-100">Edit Task</DialogTitle>
+              <DialogDescription className="text-zinc-500">
+                Update task details
+              </DialogDescription>
             </DialogHeader>
             <TaskForm
               task={editingTask}
