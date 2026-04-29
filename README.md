@@ -30,7 +30,6 @@ A comprehensive, production-ready workflow management application built with Nex
 - ✅ Tested with Windows PowerShell and Command Prompt
 - ✅ Works with Git Bash, WSL2, and WSL
 - ✅ Node.js 18+ and npm support
-- ✅ Bun runtime support
 
 ### macOS
 - ✅ Fully compatible with macOS 10.15+
@@ -66,7 +65,7 @@ A comprehensive, production-ready workflow management application built with Nex
 
 ### Development Tools
 - **ESLint** - Code linting
-- **Bun** - Fast JavaScript runtime and package manager (Windows supported)
+- **tsx** - TypeScript execution and watch mode
 
 ## 📁 Project Structure
 
@@ -117,103 +116,65 @@ my-project/
 
 ## 💻 Windows Setup Guide
 
-### Option 1: Using Bun (Recommended - Fastest)
+### Prerequisites
 
-#### Prerequisites
-1. **Install Node.js** (optional, but recommended):
+1. **Install Node.js**:
    - Download from [nodejs.org](https://nodejs.org/)
    - Choose LTS version (18+ recommended)
    - Run installer and follow prompts
+   - Verify installation: Open Command Prompt or PowerShell and run:
+     ```
+     node --version
+     npm --version
+     ```
 
-2. **Install Bun** (JavaScript Runtime):
-   - Open PowerShell as Administrator
-   - Run: `powershell -c "irm bun.sh/install.ps1 | iex"`
-   - Or download from [bun.sh](https://bun.sh/)
-
-3. **Install Git** (if not installed):
+2. **Install Git** (if not installed):
    - Download from [git-scm.com](https://git-scm.com/)
    - Run installer with default settings
 
-#### Installation Steps
+### Installation Steps (Using npm)
 
-1. **Extract/Clone the Project**:
-   ```powershell
-   # If you have a ZIP file, extract it
-   # If you're cloning from Git:
-   cd C:\Users\YourUsername\Documents
-   git clone <repository-url>
-   cd my-project
-   ```
+#### Option 1: Quick Setup (Recommended)
 
-2. **Install Dependencies**:
+1. **Navigate to Project Directory**:
    ```powershell
-   bun install
-   ```
-   
-   Or using npm:
-   ```powershell
-   npm install
+   # PowerShell
+   cd C:\path\to\my-project
+
+   # OR Command Prompt
+   cd C:\path\to\my-project
    ```
 
-3. **Set Up Database**:
+2. **Install Dependencies and Set Up Database**:
    ```powershell
-   bun run db:push
-   ```
-   
-   Or using npm:
-   ```powershell
-   npx prisma db push
+   # PowerShell or Command Prompt
+   npm run setup
    ```
 
-4. **Seed Database with Sample Data** (Optional but Recommended):
-   ```powershell
-   bun run db:seed
-   ```
-   
-   Or using npm:
-   ```powershell
-   npx tsx prisma/seed.ts
-   ```
+   This command will:
+   - Install all npm dependencies
+   - Set up the SQLite database
+   - Seed the database with sample data
 
-5. **Start Development Server**:
-   ```powershell
-   bun run dev
-   ```
-   
-   Or using npm:
+3. **Start Development Server**:
    ```powershell
    npm run dev
    ```
-   
+
    The server will start at http://localhost:3000
 
-6. **Start WebSocket Service** (New Terminal Window):
+4. **Start WebSocket Service** (Open New Terminal):
    ```powershell
    cd mini-services\workflow-socket
-   bun run dev
-   ```
-   
-   Or using npm:
-   ```powershell
-   cd mini-services\workflow-socket
+   npm install
    npm run dev
    ```
 
-7. **Access the Application**:
+5. **Access the Application**:
    - Open your browser and go to http://localhost:3000
    - Or use the Preview Panel in your development environment
 
-### Option 2: Using npm (Node.js Only)
-
-#### Prerequisites
-1. **Install Node.js**:
-   - Download from [nodejs.org](https://nodejs.org/)
-   - Choose LTS version (18+ required)
-   - Run installer
-
-2. **Install Git** (if needed)
-
-#### Installation Steps
+#### Option 2: Step-by-Step Installation
 
 1. **Navigate to Project Directory**:
    ```powershell
@@ -227,12 +188,12 @@ my-project/
 
 3. **Set Up Database**:
    ```powershell
-   npx prisma db push
+   npm run db:push
    ```
 
-4. **Seed Database** (Optional):
+4. **Seed Database with Sample Data** (Optional but Recommended):
    ```powershell
-   npx tsx prisma/seed.ts
+   npm run db:seed
    ```
 
 5. **Start Development Server**:
@@ -240,120 +201,107 @@ my-project/
    npm run dev
    ```
 
-6. **Start WebSocket Service** (New Terminal):
+6. **Start WebSocket Service** (New Terminal Window):
    ```powershell
    cd mini-services\workflow-socket
    npm install
    npm run dev
    ```
 
-### Option 3: Using WSL2 (Windows Subsystem for Linux)
+### Using Git Bash on Windows
+
+If you prefer Git Bash, the commands are the same as on Linux/macOS:
+
+```bash
+cd /c/path/to/my-project
+npm run setup
+npm run dev
+
+# In another terminal
+cd mini-services/workflow-socket
+npm install
+npm run dev
+```
+
+### Using WSL2 (Windows Subsystem for Linux)
 
 1. **Enable WSL2** (if not enabled):
    - Open PowerShell as Administrator
    - Run: `wsl --install`
    - Restart computer
 
-2. **Install Dependencies**:
+2. **Navigate and Install**:
    ```bash
    # In WSL2 terminal
-   cd /mnt/c/Users/YourUsername/Documents/my-project
-   curl -fsSL https://bun.sh/install.sh | bash
-   bun install
+   cd /mnt/c/Users/YourUsername/path/to/my-project
+   npm run setup
+   npm run dev
+
+   # In another terminal
+   cd mini-services/workflow-socket
+   npm install
+   npm run dev
    ```
 
-3. **Follow Standard Setup**:
-   ```bash
-   bun run db:push
-   bun run db:seed
-   bun run dev
-   ```
-
-## 🐧 macOS Setup Guide
+## 🍎 macOS Setup Guide
 
 ### Prerequisites
-1. **Install Homebrew** (if not installed):
+1. **Install Node.js**:
    ```bash
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   ```
-
-2. **Install Bun**:
-   ```bash
-   brew install bun
+   brew install node
    ```
 
 ### Installation
 ```bash
-# Clone or navigate to project
 cd my-project
+npm run setup
+npm run dev
 
-# Install dependencies
-bun install
-
-# Set up database
-bun run db:push
-
-# Seed database
-bun run db:seed
-
-# Start dev server
-bun run dev
-
-# Start WebSocket service (new terminal)
+# In another terminal
 cd mini-services/workflow-socket
-bun run dev
+npm install
+npm run dev
 ```
 
 ## 🐧 Linux Setup Guide
 
 ### Prerequisites
 ```bash
-# Install Bun (Linux)
-curl -fsSL https://bun.sh/install.sh | bash
+# Ubuntu/Debian
+sudo apt-get install nodejs npm
 
-# Or using Node.js
-sudo apt-get install nodejs npm  # Ubuntu/Debian
-sudo dnf install nodejs npm      # Fedora
+# Fedora
+sudo dnf install nodejs npm
 ```
 
 ### Installation
 ```bash
 cd my-project
-bun install
-bun run db:push
-bun run db:seed
-bun run dev
+npm run setup
+npm run dev
 
-# Start WebSocket service
+# In another terminal
 cd mini-services/workflow-socket
-bun run dev
+npm install
+npm run dev
 ```
 
 ## 📝 Available Scripts
 
-### Package Manager Commands
-
-#### Using Bun (Recommended)
-- `bun run dev` - Start Next.js development server
-- `bun run build` - Build for production
-- `bun run start` - Start production server
-- `bun run lint` - Run ESLint
-- `bun run db:push` - Push database schema to SQLite
-- `bun run db:generate` - Generate Prisma client
-- `bun run db:migrate` - Run database migrations
-- `bun run db:reset` - Reset database
-- `bun run db:seed` - Seed database with sample data
-
-#### Using npm
-- `npm run dev` - Start Next.js development server
+### Using npm (All Platforms)
+- `npm run dev` - Start Next.js development server on port 3000
 - `npm run build` - Build for production
 - `npm run start` - Start production server
+- `npm run start:win` - Start production server on Windows (sets NODE_ENV)
 - `npm run lint` - Run ESLint
 - `npm run db:push` - Push database schema to SQLite
 - `npm run db:generate` - Generate Prisma client
 - `npm run db:migrate` - Run database migrations
 - `npm run db:reset` - Reset database
 - `npm run db:seed` - Seed database with sample data
+- `npm run start:socket` - Start WebSocket service
+- `npm run setup` - Quick setup: install + db push + seed
+- `npm run setup:win` - Same as setup for Windows
 
 ## 🗄️ Database Schema
 
@@ -511,7 +459,7 @@ NEXT_PUBLIC_WS_URL="http://localhost:3003"
    # Check ports
    netstat -ano | findstr ":3000"
    netstat -ano | findstr ":3003"
-   
+
    # Kill processes if needed
    taskkill /PID <PID> /F
    ```
@@ -520,7 +468,7 @@ NEXT_PUBLIC_WS_URL="http://localhost:3003"
    ```powershell
    # Allow scripts (temporary)
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-   
+
    # Or run bypassed
    powershell -ExecutionPolicy Bypass -File script.ps1
    ```
@@ -529,18 +477,20 @@ NEXT_PUBLIC_WS_URL="http://localhost:3003"
 
 6. **VS Code Integration**: Recommended editor with full TypeScript support and integrated terminal.
 
+7. **Antivirus Software**: Some antivirus software may block Node.js or database operations. Add the project folder to your antivirus exclusions if you encounter issues.
+
 ## 🐛 Troubleshooting
 
 ### Windows-Specific Issues
 
-#### Issue: "bun" not recognized
-**Solution**: Add Bun to PATH or use full path
+#### Issue: "npm" not recognized
+**Solution**: Ensure Node.js is installed and added to PATH
 ```powershell
-# Add to PATH temporarily
-$env:Path += ";C:\Users\$env:USERNAME\.bun\bin"
+# Check Node.js installation
+node --version
+npm --version
 
-# Or use full path
-C:\Users\$env:USERNAME\.bun\bin\bun.exe install
+# If not found, reinstall Node.js from nodejs.org
 ```
 
 #### Issue: Port already in use
@@ -555,16 +505,17 @@ taskkill /PID <PID> /F
 #### Issue: Database lock errors
 **Solution**: Close all terminal instances and restart
 ```powershell
-# Kill all Node/Bun processes
-Get-Process node, bun | Stop-Process -Force
+# Kill all Node processes
+taskkill /F /IM node.exe
 ```
 
 #### Issue: Module not found errors
 **Solution**: Reinstall dependencies
 ```powershell
 # Clear cache and reinstall
-rm -r -Force node_modules
-bun install
+rmdir /s /q node_modules
+npm cache clean --force
+npm install
 ```
 
 #### Issue: Firewall blocking connections
@@ -572,17 +523,28 @@ bun install
 - Go to Windows Security → Firewall & network protection
 - Allow an app through firewall → Allow Node.js
 
+#### Issue: "tsx" not found
+**Solution**: Install tsx globally or locally
+```powershell
+# Install globally
+npm install -g tsx
+
+# Or it should be installed via package.json
+npm install
+```
+
 ### Common Issues
 
 #### Issue: Dependencies not installing
 **Solution**: Clear cache and reinstall
 ```powershell
 # Windows
-rm -r -Force node_modules
-bun install
+rmdir /s /q node_modules
+npm cache clean --force
+npm install
 
-# npm
-rm -r -Force node_modules
+# macOS/Linux
+rm -rf node_modules
 npm cache clean --force
 npm install
 ```
@@ -590,8 +552,25 @@ npm install
 #### Issue: Database errors
 **Solution**: Reset database
 ```powershell
-bun run db:reset
-bun run db:seed
+npm run db:reset
+npm run db:seed
+```
+
+#### Issue: Build fails with errors
+**Solution**: Run lint to check for code issues
+```powershell
+npm run lint
+```
+
+#### Issue: WebSocket not connecting
+**Solution**: Ensure the WebSocket service is running on port 3003
+```powershell
+# Check if service is running
+netstat -ano | findstr ":3003"
+
+# Start the service if not running
+cd mini-services\workflow-socket
+npm run dev
 ```
 
 ## 🤝 Contributing
@@ -600,7 +579,7 @@ Contributions are welcome! Please follow these guidelines:
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run `bun run lint` to check code quality
+4. Run `npm run lint` to check code quality
 5. Submit a pull request
 
 ## 📄 License
@@ -623,56 +602,74 @@ For questions, issues, or suggestions, please open an issue on the repository.
 
 ### Windows (PowerShell)
 ```powershell
-# Install and run with Bun
-bun install
-bun run db:push
-bun run db:seed
-bun run dev
+# Quick setup and run
+npm run setup
+npm run dev
 
-# In another terminal
+# In another terminal for WebSocket
 cd mini-services\workflow-socket
-bun run dev
+npm install
+npm run dev
 ```
 
 ### Windows (Command Prompt)
 ```cmd
-REM Install and run with Bun
-bun install
-bun run db:push
-bun run db:seed
-bun run dev
-
-REM In another terminal
-cd mini-services\workflow-socket
-bun run dev
-```
-
-### Windows (npm)
-```cmd
-REM Install and run with npm
-npm install
-npx prisma db push
-npx tsx prisma/seed.ts
+REM Quick setup and run
+npm run setup
 npm run dev
 
-REM In another terminal
+REM In another terminal for WebSocket
 cd mini-services\workflow-socket
+npm install
+npm run dev
+```
+
+### Windows (Git Bash)
+```bash
+# Quick setup and run
+npm run setup
+npm run dev
+
+# In another terminal for WebSocket
+cd mini-services/workflow-socket
 npm install
 npm run dev
 ```
 
 ### macOS/Linux
 ```bash
-# Install and run
-bun install
-bun run db:push
-bun run db:seed
-bun run dev
+# Quick setup and run
+npm run setup
+npm run dev
 
-# In another terminal
+# In another terminal for WebSocket
 cd mini-services/workflow-socket
-bun run dev
+npm install
+npm run dev
 ```
+
+## 📋 Verification
+
+After following the setup steps, verify your installation:
+
+1. **Check Development Server**:
+   - Open http://localhost:3000 in your browser
+   - You should see the Workflow Management Tool dashboard
+
+2. **Check WebSocket Service**:
+   - The WebSocket service should be running on port 3003
+   - Check terminal for "WebSocket server running on port 3003" message
+
+3. **Check Database**:
+   - Navigate to the `db/` folder
+   - You should see a `.db` file created
+   - If you seeded the database, it should contain sample data
+
+4. **Test Functionality**:
+   - Create a new workflow
+   - Add tasks using drag-and-drop
+   - Check the timeline view
+   - Verify notifications are working
 
 ---
 

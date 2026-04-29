@@ -2,23 +2,21 @@
   "name": "nextjs_tailwind_shadcn_ts",
   "version": "0.2.0",
   "private": true,
-  "prisma": {
-    "seed": "bun run prisma/seed.ts"
-  },
+
   "scripts": {
-    "dev": "next dev -p 3000 2>&1 | tee dev.log",
-    "dev:win": "next dev -p 3000",
-    "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
-    "build:win": "next build && xcopy /E /I /Y \".next\\static\" \".next\\standalone\\.next\\\" && xcopy /E /I /Y \"public\" \".next\\standalone\\\"",
-    "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "NODE_ENV=production node .next/standalone/server.js",
+    "start:win": "set NODE_ENV=production&& node .next/standalone/server.js",
     "lint": "eslint .",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
-    "db:seed": "bun run prisma/seed.ts",
-    "start:socket": "cd mini-services/workflow-socket && bun run dev",
-    "setup:win": "npm install && npx prisma db push && npx tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "start:socket": "cd mini-services/workflow-socket && npm run dev",
+    "setup": "npm install && npm run db:push && npm run db:seed",
+    "setup:win": "npm install && npm run db:push && npm run db:seed"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -83,6 +81,7 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
+    "tsx": "^4.19.2",
     "vaul": "^1.1.2",
     "z-ai-web-dev-sdk": "^0.0.17",
     "zod": "^4.0.2",
