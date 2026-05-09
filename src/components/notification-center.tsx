@@ -29,7 +29,6 @@ export interface Notification {
   userId: string
   createdAt: string
 }
-
 export function NotificationCenter({ userId }: { userId: string }) {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all')

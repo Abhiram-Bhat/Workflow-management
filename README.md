@@ -672,6 +672,3 @@ After following the setup steps, verify your installation:
    - Verify notifications are working
 
 ---
-
-Built with ❤️ using modern web technologies
-Works on Windows, macOS, and Linux

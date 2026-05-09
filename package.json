@@ -2,7 +2,6 @@
   "name": "nextjs_tailwind_shadcn_ts",
   "version": "0.2.0",
   "private": true,
-
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
@@ -80,8 +79,8 @@
     "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
-    "uuid": "^11.1.0",
     "tsx": "^4.19.2",
+    "uuid": "^11.1.0",
     "vaul": "^1.1.2",
     "z-ai-web-dev-sdk": "^0.0.17",
     "zod": "^4.0.2",
@@ -89,6 +88,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/node": "25.6.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
